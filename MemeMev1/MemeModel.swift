@@ -6,12 +6,11 @@
 //  Copyright © 2018 Optimize 7. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 struct Meme {
-    var topText: String
-    var bottomText: String
-    var image: UIImage?
-    var memeImage: UIImage?
+    let topText: String
+    let bottomText: String
+    let image: UIImage?
+    let memeImage: UIImage?
 }

@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  MemeViewController.swift
 //  MemeMe v1 
 //
 //  Created by Tiago Oliveira on 24/11/18.
@@ -32,10 +32,12 @@ class MemeViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         subscribeObservers()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         unsubscribeObservers()
     }
     
@@ -49,7 +51,22 @@ class MemeViewController: UIViewController {
     }
     
     @IBAction func shareMeme(_ sender: Any) {
-        save()
+        let memedImage = generateMemedImage()
+        
+        let activityViewController = UIActivityViewController(
+            activityItems: [memedImage],
+            applicationActivities: nil)
+        
+        activityViewController.popoverPresentationController?.sourceView = self.view
+        
+        activityViewController.completionWithItemsHandler = {
+            (activityType, completed, returnedItems, activityErrors) in
+            if completed {
+                self.save(memedImage)
+            }
+        }
+        
+        present(activityViewController, animated: true, completion: nil)
     }
     
     @IBAction func cancelMeme(_ sender: Any) {
@@ -94,23 +111,12 @@ class MemeViewController: UIViewController {
         self.present(imagePicker, animated: true)
     }
     
-    private func save() {
-        
-        let memedImage = generateMemedImage()
-        
-//        let meme = Meme(
-//            topText: topTextField.text ?? "",
-//            bottomText: bottomTextField.text ?? "",
-//            image: memeImageView.image!,
-//            memeImage: memedImage)
-        
-        let meme = [memedImage]
-        
-        let activityViewController = UIActivityViewController(activityItems: meme, applicationActivities: nil)
-        
-        activityViewController.popoverPresentationController?.sourceView = self.view
-        
-        present(activityViewController, animated: true, completion: nil)
+    private func save(_ memedImage: UIImage) {
+        _ = Meme(
+            topText: topTextField.text ?? "",
+            bottomText: bottomTextField.text ?? "",
+            image: memeImageView.image!,
+            memeImage: memedImage)
     }
     
     private func hideToolbars(_ hide: Bool) {
